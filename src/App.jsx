@@ -1,12 +1,19 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Register from "./components/Register";
-import { useEffect, useState } from "react";
+
+// firebase
 import { auth } from "./config/firebase";
+
+// hooks and functions
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "./Store/authSlice";
+
 import { useSelector } from "react-redux";
-import LandingPage from "./components/LandingPage";
+
+// components
+import Register from "./components/Register";
+import Routing from "./components/Routing";
+import LoadingSpinner from "./components/UI/LoadingSpinner";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,23 +33,21 @@ function App() {
 
     // Cleanup listener when component unmounts
     return () => unsubscribe();
-  }, []);
+  }, [dispatch]);
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   if (loading) {
-    return <>Loading...</>;
+    return <LoadingSpinner />;
   }
 
   return (
     <div>
-      <Navbar isLoggedIn={isLoggedIn} />
-      {auth.currentUser == null ? (
+      {auth.currentUser == null && !isLoggedIn ? (
         <section className="m-auto w-full h-screen flex justify-center items-center">
           <Register />
         </section>
       ) : (
-        <LandingPage />
+        <Routing />
       )}
     </div>
   );
