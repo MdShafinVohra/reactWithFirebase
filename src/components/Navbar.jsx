@@ -8,6 +8,9 @@ export default function Navbar({ isLoggedIn }) {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
+
+  console.log(user);
+
   const profilePic = user?.photoURL;
   const displayName = user?.displayName || user?.email;
 

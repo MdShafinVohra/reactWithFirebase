@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
+import { auth } from "../config/firebase";
 
 export default function LandingPage() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -8,7 +9,11 @@ export default function LandingPage() {
   return (
     <>
       <Navbar isLoggedIn={isLoggedIn} />
-      <Outlet />
+      {auth.currentUser != null && isLoggedIn && (
+        <>
+          <Outlet />
+        </>
+      )}
     </>
   );
 }

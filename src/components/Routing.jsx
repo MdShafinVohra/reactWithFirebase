@@ -1,6 +1,8 @@
 import LandingPage from "./LandingPage";
+import Login from "./Login";
 import Products from "./Products";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Register from "./Register";
 
 // Browser Routing Functionality
 const router = createBrowserRouter([
@@ -14,6 +16,14 @@ const router = createBrowserRouter([
         element: <Products />,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 

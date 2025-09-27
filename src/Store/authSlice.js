@@ -30,11 +30,11 @@ export const loginWithEmailAndPassword = createAsyncThunk("auth/loginWithEmailAn
 
     if (userDocSnap.exists()) {
       const userData = userDocSnap.data();
-      return { user: user, userData: userData }; // Return both auth user and Firestore data
+      return userData; // Return both auth user and Firestore data
     } else {
       // Handle case where user is authenticated but no Firestore doc exists
       // This can happen if the user was created without a database entry.
-      return { user: user, userData: null };
+      return user;
     }
   } catch (err) {
     return thunkApi.rejectWithValue(err.message);
@@ -107,7 +107,7 @@ export const logOut = createAsyncThunk("auth/logOut", async () => {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { isLoggedIn: false, user: {} },
+  initialState: { isLoggedIn: false, user: null },
   reducers: {
     login(state) {
       state.isLoggedIn = true;
@@ -115,12 +115,22 @@ const authSlice = createSlice({
     logout(state) {
       state.isLoggedIn = false;
     },
+    setUser(state, action) {
+      if (action.payload) {
+        state.isLoggedIn = true;
+        state.user = action.payload;
+      } else {
+        state.isLoggedIn = false;
+        state.user = null;
+      }
+    },
   },
 
   extraReducers: (builder) => {
     builder
       .addCase(registerWithEmailAndPassword.fulfilled, (state, action) => {
         state.isLoggedIn = true;
+        console.log(action.payload);
         state.user = action.payload;
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
@@ -132,7 +142,7 @@ const authSlice = createSlice({
       })
       .addCase(loginWithEmailAndPassword.fulfilled, (state, action) => {
         state.isLoggedIn = true;
-        state.user = action.payload.userData;
+        state.user = action.payload;
       });
   },
 });
